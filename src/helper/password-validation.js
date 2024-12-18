@@ -9,8 +9,7 @@ const passwordValidation = (req, res, next) => {
 
   // Add password rules
   schema
-    .is().min(8)                                    // Minimum length 8
-    .has().uppercase()                              // Must have at least one uppercase letter
+    .is().min(8)                                    // Minimum length 8                          // Must have at least one uppercase letter
     .has().lowercase()                              // Must have at least one lowercase letter
     .has().digits()                                 // Must have at least one digit
     .has().symbols();                               // Must have at least one special character

@@ -139,7 +139,7 @@ exports.logIn = async (req, res) => {
     // Compare password
     const passwordCompared = await bcrypt.compare(password, userExist.password);
     if (!passwordCompared) {
-      return res.status(400).send({ message: "Incorrect password!", success: false });
+      return res.status(401).send({ message: "Incorrect password!", success: false });
     }
 
     // Generate JWT token
@@ -150,7 +150,7 @@ exports.logIn = async (req, res) => {
 
     await emailSending();
 
-    res.status(200).send({ message: 'Login successful!', token, email: userExist.email, success: true });
+    res.status(200).send({ message: 'Login successfull!', token, email: userExist.email, success: true, user:userExist });
   } catch (error) {
     console.error("Error during login:", error);
 

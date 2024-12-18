@@ -46,16 +46,16 @@ function checkExternalServiceStatus() {
 
   return Math.random() < 0.8;
 }
-app.get('/status', (req, res) => {
+// app.get('/status', (req, res) => {
 
-  const isServiceUp = checkExternalServiceStatus();
+//   const isServiceUp = checkExternalServiceStatus();
 
-  if (isServiceUp) {
-    res.json({ status: 'up' });
-  } else {
-    res.json({ status: 'down' });
-  }
-});
+//   if (isServiceUp) {
+//     res.json({ status: 'up' });
+//   } else {
+//     res.json({ status: 'down' });
+//   }
+// });
 
 
 

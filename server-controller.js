@@ -1,46 +1,36 @@
-require('dotenv').config()
-const connectdb = require('./db')
+require('dotenv').config();
+const connectdb = require('./db');
 const PORT = process.env.PORT || 5000;
 const express = require('express');
-// const app = express()
-
-const fetchServerStatus= require('./src/server-status/monitor')
-const app= require("./app-controller");
+const app = require("./app-controller"); // Assuming app-controller sets up express
 const http = require('http');
-const servers = http.createServer(app);
+const fetchServerStatus = require('./src/server-status/monitor');
 
+// Create an HTTP server using the Express app
+const server = http.createServer(app);
 
+// Initialize Socket.IO with the HTTP server
 
+const socketHandler = require('./src/sockets-io.js/socket'); // Require the socket handler
 
-const server = (async () => {
+// Pass the HTTP server to Socket.IO
+socketHandler(server);
+
+server.listen(PORT, async () => {
   try {
-    const { default: chalk } = await import('chalk');
-    app.listen(PORT, () => {
-      connectdb()
-      fetchServerStatus()
-      console.log(chalk.green(`\nServer is running on port: ${PORT}`));  
-    })
-    
+    await connectdb();  // Connect to the database
+    // fetchServerStatus(); // Optionally monitor the server status
+    console.log((`\nServer is running on port: ${PORT}`));
   } catch (error) {
-    console.log(chalk.red.bold('Error: Server failed to start!'));
-    console.error('Error importing chalk:', error);
+    console.log(('Error: Server failed to start!'));
+    console.error(error);
   }
-})();
-
-require('./src/sockets-io.js/socket')(server);
-
+});
 
 // Handle unhandled promise rejections
-process.on("unhandledRejection", async (reason, promise) => {
-  (async () => {
-    try {
-      const { default: chalk } = await import('chalk');
-    console.error("Unhandled Rejection at:",chalk.red.bold(promise), "reason:", chalk.red.bold(reason));
-    // You can add additional error handling or graceful shutdown logic here
-  } catch (error) {
-    console.error('Error handling unhandled rejection:',chalk.red.bold(error));
-  }
-})();
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at:", promise, "reason:", reason);
+  // Optionally add graceful shutdown here
 });
 
 // Graceful shutdown on SIGINT signal (Ctrl+C)
@@ -51,11 +41,3 @@ process.on("SIGINT", () => {
     process.exit(0);
   });
 });
-
-
-
-
-
-
-
-

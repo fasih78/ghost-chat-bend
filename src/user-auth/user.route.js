@@ -3,7 +3,7 @@ const UserService = require('./user.service')
 const passwordValidation = require('../helper/password-validation');
 const emailValidation = require('../helper/email-validator');
 
-router.post('/signup',emailValidation,async (req, res) => {
+router.post('/signup',async (req, res) => {
      
         const result = await UserService.userSignUp(req, res);
         return result
